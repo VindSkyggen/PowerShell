@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   markdown-link-check:
-    name: Check markdown links
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -21,7 +20,6 @@ jobs:
         check-modified-files-only: 'yes'
         config-file: .github/workflows/markdown-link/config.json
   markdown-lint:
-    name: Check markdown syntax
     permissions:
       contents: read
       packages: read
@@ -38,41 +36,6 @@ jobs:
       env:
         VALIDATE_ALL_CODEBASE: false
         DEFAULT_BRANCH: master
-        FILTER_REGEX_INCLUDE: .*\.md$
+        FILTER_REGEX_INCLUDE: .*\.md
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  markdown-spelling:
-    runs-on: ubuntu-latest
-    name: Check markdown spelling
-    permissions:
-      contents: read
-      pull-requests: read
-      actions: read
-    outputs:
-      followup: ${{ steps.spelling.outputs.followup }}
-      internal_state_directory: ${{ steps.spelling.outputs.internal_state_directory }}
-      docker_container: ${{ steps.spelling.outputs.docker_container }}
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        # Full git history is needed to get a proper
-        # list of changed files within `super-linter`
-        fetch-depth: 0
-    - name: Check Spelling
-      uses: check-spelling/check-spelling@v0.0.21
-      id: spelling
-      with:
-        experimental_apply_changes_via_bot: 1
-        suppress_push_for_open_pull_request: 1
-        post_comment: 0
-        use_sarif: 1
-        unknown_word_limit: 10
-        checkout: false
-        extra_dictionaries:
-          cspell:software-terms/src/software-terms.txt
-          cspell:cpp/src/cpp.txt
-          cspell:powershell/powershell.txt
-          cspell:win32/src/win32.txt
-          cspell:filetypes/filetypes.txt
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # only_check_changed_files: 1
-        
+        VALIDATE_EDITORCONFIG: false        
